@@ -198,19 +198,26 @@ function ensureAudioCtx(){
 }
 
 const bgMusic = document.getElementById("bgMusic");
+  
 function startFlow(){
 
-  // Resume AudioContext nếu bị suspend
-  if(audioCtx && audioCtx.state === "suspended"){
+  // Tạo AudioContext nếu chưa có
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  // Resume nếu bị suspend
+  if(audioCtx.state === "suspended"){
     audioCtx.resume();
   }
 
   bgMusic.volume = 0.6;
-  bgMusic.currentTime = 0;
 
-  bgMusic.play().catch(err=>{
-    console.log("Play failed:", err);
-  });
+  if(bgMusic.paused){
+    bgMusic.play().catch(err=>{
+      console.log("Music play failed:", err);
+    });
+  }
 
   document.getElementById("modePanel").style.display = "block";
 }
@@ -244,9 +251,7 @@ function playJackpotSound(){
   o2.stop(audioCtx.currentTime + 1.2);
 }
 
-function startFlow(){
-  document.getElementById("modePanel").style.display = "block";
-}
+
 
 const rewards = ["Cái nịt","1 cá","2 cá","5 cá","10 cá","20 cá","50 cá","100 cá","200 cá","Cái nịt","500 cá","Cái nịt"];
 const canvas = document.getElementById("wheel");
@@ -509,6 +514,7 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
+
 
 
 
