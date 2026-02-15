@@ -148,8 +148,8 @@
   <button onclick="startFlow()">Thử vận may đầu năm</button>
   <div id="modePanel" style="display:none">
     <div class="mode">
-      <button id="btnWarmup">🎯 gieo quẻ thử</button>
-      <button id="btnReal">🐳 Chơi nuôn (chỉ có 1 lần) 🐳</button>
+      <button onclick="spin('warmup')">🎯 gieo quẻ thử</button>
+      <button id="realBtn" onclick="spin('real')">🐳 Chơi nuôn (chỉ có 1 lần) 🐳</button>
     </div>
     
     <div id="playedNote" class="played-note" style="display:none">Hết lượt rồi, năm sau quay lại</div>
@@ -171,8 +171,8 @@
 
 <canvas id="fireworks"></canvas>
 
-<audio id="bgMusic" loop>
-  <source src="BGM.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop preload="auto">
+  <source src="BGM.m4a" type="audio/mp4">
 </audio>
 
 <script>
@@ -189,19 +189,6 @@ function startPetals(){
   }, 350);
 }
 startPetals();
-  document.addEventListener("DOMContentLoaded", () => {
-  const btnWarmup = document.getElementById("btnWarmup");
-  const btnReal   = document.getElementById("btnReal");
-
-  if(btnWarmup) {
-    btnWarmup.addEventListener("click", () => spin("warmup"));
-    btnWarmup.addEventListener("touchend", () => spin("warmup"));
-  }
-  if(btnReal) {
-    btnReal.addEventListener("click", () => spin("real"));
-    btnReal.addEventListener("touchend", () => spin("real"));
-  }
-});
 </script>
 
 <script>
@@ -212,22 +199,9 @@ function ensureAudioCtx(){
 
 const bgMusic = document.getElementById("bgMusic");
 function enableMusicOnce(){
-  if(!bgMusic) return;
-
-  if(!audioCtx){
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  if(audioCtx.state === "suspended"){
-    audioCtx.resume();
-  }
-
   bgMusic.volume = 0.6;
-
-  if(bgMusic.paused){
-    bgMusic.play().catch(e => console.log(e));
-  }
-
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch(()=>{});
   window.removeEventListener("click", enableMusicOnce);
   window.removeEventListener("touchstart", enableMusicOnce);
 }
@@ -264,8 +238,6 @@ function playJackpotSound(){
 }
 
 function startFlow(){
-  enableMusicOnce(); // 🔥 đảm bảo bật nhạc khi user bấm nút
-
   document.getElementById("modePanel").style.display = "block";
 }
 
@@ -530,8 +502,3 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
-
-
-
-
-
