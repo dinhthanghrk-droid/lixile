@@ -75,9 +75,7 @@
   }
 
   #flow { display:flex; flex-direction:column; align-items:center; gap:10px; z-index: 2; }
-  .mode { display: flex; 
-  gap: 10px;
-  justify-content: center;; }
+  .mode { display:flex; gap:10px; }
   .note { font-size:12px; opacity:.85; }
 
   .played-note {
@@ -195,32 +193,20 @@ startPetals();
 
 <script>
 let audioCtx;
-const bgMusic = document.getElementById("bgMusic");
-
-function initAudio() {
-
-  // Tạo AudioContext nếu chưa có
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  // Android cần resume nếu đang suspended
-  if (audioCtx.state === "suspended") {
-    audioCtx.resume();
-  }
-
-  // Phát nhạc nền
-  if (bgMusic.paused) {
-    bgMusic.volume = 0.6;
-    bgMusic.play().catch(err => {
-      console.log("Audio blocked:", err);
-    });
-  }
+function ensureAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 }
 
-// Bắt buộc phải có user interaction
-document.body.addEventListener("click", initAudio, { once: true });
-document.body.addEventListener("touchstart", initAudio, { once: true });
+const bgMusic = document.getElementById("bgMusic");
+function enableMusicOnce(){
+  bgMusic.volume = 0.6;
+  bgMusic.currentTime = 0;
+  bgMusic.play().catch(()=>{});
+  window.removeEventListener("click", enableMusicOnce);
+  window.removeEventListener("touchstart", enableMusicOnce);
+}
+window.addEventListener("click", enableMusicOnce);
+window.addEventListener("touchstart", enableMusicOnce);
 
 function playImpactSound(strength = 0.3, isFinal = false){
   ensureAudioCtx();
@@ -516,7 +502,5 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
-
-
 
 
