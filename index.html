@@ -189,6 +189,19 @@ function startPetals(){
   }, 350);
 }
 startPetals();
+  document.addEventListener("DOMContentLoaded", () => {
+  const btnWarmup = document.getElementById("btnWarmup");
+  const btnReal   = document.getElementById("btnReal");
+
+  if(btnWarmup) {
+    btnWarmup.addEventListener("click", () => spin("warmup"));
+    btnWarmup.addEventListener("touchend", () => spin("warmup"));
+  }
+  if(btnReal) {
+    btnReal.addEventListener("click", () => spin("real"));
+    btnReal.addEventListener("touchend", () => spin("real"));
+  }
+});
 </script>
 
 <script>
@@ -517,6 +530,7 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
+
 
 
 
