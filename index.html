@@ -199,9 +199,14 @@ function ensureAudioCtx(){
 
 const bgMusic = document.getElementById("bgMusic");
 function enableMusicOnce(){
+  if(!bgMusic) return;
+
   bgMusic.volume = 0.6;
-  bgMusic.currentTime = 0;
-  bgMusic.play().catch(()=>{});
+
+  if(bgMusic.paused){
+    bgMusic.play().catch(()=>{});
+  }
+
   window.removeEventListener("click", enableMusicOnce);
   window.removeEventListener("touchstart", enableMusicOnce);
 }
@@ -238,6 +243,8 @@ function playJackpotSound(){
 }
 
 function startFlow(){
+  enableMusicOnce(); // 🔥 đảm bảo bật nhạc khi user bấm nút
+
   document.getElementById("modePanel").style.display = "block";
 }
 
@@ -502,3 +509,4 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
+
