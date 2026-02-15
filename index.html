@@ -201,11 +201,16 @@ const bgMusic = document.getElementById("bgMusic");
 function enableMusicOnce(){
   if(!bgMusic) return;
 
+  if(audioCtx && audioCtx.state === "suspended"){
+    audioCtx.resume();
+  }
+
   bgMusic.volume = 0.6;
 
   if(bgMusic.paused){
-    bgMusic.play().catch(()=>{});
+    bgMusic.play().catch(e => console.log(e));
   }
+}
 
   window.removeEventListener("click", enableMusicOnce);
   window.removeEventListener("touchstart", enableMusicOnce);
