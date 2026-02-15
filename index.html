@@ -5,6 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Lì xì May Mắn</title>
 <style>
+@keyframes tetVibe {
+  0% {
+    transform: scale(1);
+    color: #b91c1c;
+    text-shadow:
+      0 0 8px #fde047,
+      0 0 16px #facc15;
+  }
+
+  50% {
+    transform: scale(1.18);
+    color: #facc15;
+    text-shadow:
+      0 0 18px #fde047,
+      0 0 32px #f59e0b,
+      0 0 48px #fde047;
+  }
+
+  100% {
+    transform: scale(1);
+    color: #b91c1c;
+    text-shadow:
+      0 0 8px #fde047,
+      0 0 16px #facc15;
+  }
+}
+
+.win-blink {
+  animation: tetVibe 0.7s ease-in-out infinite;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
   body {
     margin: 0;
     min-height: 100vh;
@@ -109,17 +142,17 @@
 </head>
 <body>
 
-<h1>🧧 Lì xì nhân phẩm 🧧</h1>
+<h1>🧧 Lì xì may mắn 🧧</h1>
 
 <div id="flow">
-  <button onclick="startFlow()">Thử nhân phẩm đầu năm</button>
+  <button onclick="startFlow()">Thử vận may đầu năm</button>
   <div id="modePanel" style="display:none">
     <div class="mode">
       <button onclick="spin('warmup')">🎯 gieo quẻ thử</button>
-      <button id="realBtn" onclick="spin('real')">🔥 Chơi nuôn</button>
+      <button id="realBtn" onclick="spin('real')">🐳 Chơi nuôn (chỉ có 1 lần) 🐳</button>
     </div>
-    <div class="note"> 1 lần chơi thật xịt đợi năm sau </div>
-    <div id="playedNote" class="played-note" style="display:none">Bạn đã chơi hôm nay</div>
+    
+    <div id="playedNote" class="played-note" style="display:none">Hết lượt rồi, năm sau quay lại</div>
   </div>
 </div>
 
@@ -304,16 +337,23 @@ function spin(mode){
   const startRot = rotation;
   const slice = 2 * Math.PI / rewards.length;
 
-  let target;
-  if(mode === "real"){
-    const forceIndex = rewards.indexOf("500 cá");
-    const targetAngle = (forceIndex + 0.5) * slice;
-    target = startRot + Math.PI * 10 + (Math.PI/2 - targetAngle);
-  } else {
-    const randomIndex = Math.floor(Math.random() * rewards.length);
-    const targetAngle = (randomIndex + 0.5) * slice;
-    target = startRot + Math.PI * 6 + (Math.PI/2 - targetAngle);
-  }
+let target;
+
+if(mode === "real"){
+  const forceIndex = rewards.indexOf("500 cá");
+  const sliceCenter = forceIndex * slice + slice / 2;
+
+  // 12h thực sự trong hệ vẽ của bạn là góc 0
+  const finalRotation = -sliceCenter;
+
+  // quay thêm nhiều vòng cho đẹp
+  target = finalRotation + Math.PI * 12;
+
+} else {
+  const randomIndex = Math.floor(Math.random() * rewards.length);
+  const targetAngle = (randomIndex + 0.5) * slice;
+  target = startRot + Math.PI * 6 + (Math.PI/2 - targetAngle);
+}
 
   function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
 
@@ -427,11 +467,18 @@ function startLuckyRain(){
 
 function showWinModal(text){
   winText.innerText = "Lệ đã trúng: " + text;
+
+  // thêm hiệu ứng nhấp nháy
+  winText.classList.remove("win-blink");
+  void winText.offsetWidth; // reset animation
+  winText.classList.add("win-blink");
+
   modal.classList.add("show");
   jackpotFlashMulti();
   startFireworks();
   startLuckyRain();
 }
+
 function closeModal(){
   modal.classList.remove("show");
   stopFireworks();
