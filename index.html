@@ -171,8 +171,8 @@
 
 <canvas id="fireworks"></canvas>
 
-<audio id="bgMusic" loop preload="auto">
-  <source src="BGM.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop preload="auto" playsinline>
+  <source src="./BGM.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -198,12 +198,21 @@ function ensureAudioCtx(){
 }
 
 const bgMusic = document.getElementById("bgMusic");
-function enableMusicOnce(){
+function startFlow(){
+
+  // Resume AudioContext nếu bị suspend
+  if(audioCtx && audioCtx.state === "suspended"){
+    audioCtx.resume();
+  }
+
   bgMusic.volume = 0.6;
   bgMusic.currentTime = 0;
-  bgMusic.play().catch(()=>{});
-  window.removeEventListener("click", enableMusicOnce);
-  window.removeEventListener("touchstart", enableMusicOnce);
+
+  bgMusic.play().catch(err=>{
+    console.log("Play failed:", err);
+  });
+
+  document.getElementById("modePanel").style.display = "block";
 }
 window.addEventListener("click", enableMusicOnce);
 window.addEventListener("touchstart", enableMusicOnce);
@@ -502,6 +511,7 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
+
 
 
 
