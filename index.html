@@ -72,16 +72,10 @@
     background: linear-gradient(45deg, #fde047, #fb7185);
     color: #7f1d1d; cursor: pointer;
     box-shadow: 0 6px 15px rgba(0,0,0,.4);
-    width: 260px; 
-    text-align: center;
   }
 
   #flow { display:flex; flex-direction:column; align-items:center; gap:10px; z-index: 2; }
-  .mode { 
-  display: flex; 
-  gap: 10px; 
-  justify-content: center;   /* thêm dòng này */
-  }
+  .mode { display:flex; gap:10px; }
   .note { font-size:12px; opacity:.85; }
 
   .played-note {
@@ -151,7 +145,7 @@
 <h1>🧧 Lì xì may mắn 🧧</h1>
 
 <div id="flow">
-  <button onclick="handleStart()">Thử vận may đầu năm</button>
+  <button onclick="startFlow()">Thử vận may đầu năm</button>
   <div id="modePanel" style="display:none">
     <div class="mode">
       <button onclick="spin('warmup')">🎯 gieo quẻ thử</button>
@@ -241,19 +235,6 @@ function playJackpotSound(){
   o1.start(); o2.start();
   o1.stop(audioCtx.currentTime + 1.2);
   o2.stop(audioCtx.currentTime + 1.2);
-}
-
-function handleStart(){
-  const bgMusic = document.getElementById("bgMusic");
-
-  bgMusic.volume = 0.6;
-  bgMusic.currentTime = 0;
-
-  bgMusic.play().catch(err=>{
-    console.log("Play failed:", err);
-  });
-
-  startFlow();
 }
 
 function startFlow(){
@@ -521,9 +502,5 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
-
-
-
-
 
 
