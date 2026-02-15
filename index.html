@@ -201,7 +201,11 @@ const bgMusic = document.getElementById("bgMusic");
 function enableMusicOnce(){
   if(!bgMusic) return;
 
-  if(audioCtx && audioCtx.state === "suspended"){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if(audioCtx.state === "suspended"){
     audioCtx.resume();
   }
 
@@ -210,7 +214,6 @@ function enableMusicOnce(){
   if(bgMusic.paused){
     bgMusic.play().catch(e => console.log(e));
   }
-}
 
   window.removeEventListener("click", enableMusicOnce);
   window.removeEventListener("touchstart", enableMusicOnce);
@@ -514,5 +517,6 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
+
 
 
